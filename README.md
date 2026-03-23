@@ -2,6 +2,27 @@
 
 A full-stack data visualization tool that tracks digital attention as a financial ledger. Categorize your time by cognitive state (Deep Work, Passive Consumption, Fragmented Attention) and track your Attention ROI.
 
+## Project Structure
+
+```text
+.
+├── backend/            # FastAPI, Database, & ML Logic
+│   ├── main.py         # API entry point & CORS config
+│   ├── models.py       # DB models & Heuristic Classifier
+│   └── requirements.txt
+├── frontend/           # React + Vite Dashboard
+│   ├── src/
+│   │   ├── App.tsx     # Main visualization logic
+│   │   └── index.css   # Tailwind & Glassmorphism styles
+│   ├── tailwind.config.js
+│   └── package.json
+└── extension/          # Chrome Extension Tracker
+    ├── manifest.json
+    ├── background.js   # Event listeners & Offline buffering
+    ├── content.js      # Typing speed (WPM) detection
+    └── popup.html      # Status indicator
+```
+
 ## Components
 
 1.  **Backend (FastAPI)**: Handles data storage and heuristic ML classification.
