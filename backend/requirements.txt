@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+sqlite-utils
+matplotlib
+pandas
+scikit-learn
