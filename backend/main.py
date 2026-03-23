@@ -66,11 +66,10 @@ async def get_stats(db: Session = Depends(get_db)):
     total = sum(stats.values())
     roi = (stats["Deep Work"] / total * 100) if total > 0 else 0
     
-    return {
-        "stats": stats,
-        "roi": roi,
-        "total_minutes": total # Assuming each log is ~1 min
-    }
+@app.get("/timeline")
+async def get_timeline(db: Session = Depends(get_db)):
+    logs = db.query(DBAttentionLog).order_by(DBAttentionLog.timestamp.desc()).limit(100).all()
+    return logs
 
 if __name__ == "__main__":
     import uvicorn
