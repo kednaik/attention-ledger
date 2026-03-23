@@ -43,7 +43,7 @@ const App = () => {
   }, []);
 
   if (loading) return (
-    <div className="h-screen w-screen flex items-center justify-center bg-[#090e1a] text-white">
+    <div className="h-screen w-screen flex items-center justify-center bg-[#02040a] text-white">
       <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
         <Zap className="text-indigo-500 w-8 h-8" />
       </motion.div>
@@ -53,9 +53,9 @@ const App = () => {
   const chartData = stats ? Object.entries(stats.stats).map(([name, value]) => ({ name, value })) : [];
 
   return (
-    <div className="min-h-screen bg-[#090e1a] text-slate-300 font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-[#02040a] text-slate-300 font-sans selection:bg-indigo-500/30">
       {/* Sidebar Navigation (Slim) */}
-      <aside className="fixed left-0 top-0 bottom-0 w-20 border-r border-white/5 flex flex-col items-center py-8 gap-10 bg-[#090e1a] z-50">
+      <aside className="fixed left-0 top-0 bottom-0 w-20 border-r border-white/5 flex flex-col items-center py-8 gap-10 bg-[#02040a] z-50">
         <div className="p-3 bg-indigo-500/10 rounded-2xl text-indigo-400">
           <Zap className="w-6 h-6" />
         </div>
