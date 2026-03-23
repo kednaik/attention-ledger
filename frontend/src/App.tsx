@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Brain, Zap, Ghost, AlertTriangle, TrendingUp, ChevronRight, Activity, Clock } from 'lucide-react';
+import { Brain, Zap, Ghost, AlertTriangle, TrendingUp, Clock, LayoutDashboard, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 
@@ -43,9 +43,9 @@ const App = () => {
   }, []);
 
   if (loading) return (
-    <div className="h-screen w-screen flex items-center justify-center bg-[#0f172a] text-white">
-      <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
-        <Zap className="text-indigo-500 w-12 h-12" />
+    <div className="h-screen w-screen flex items-center justify-center bg-[#090e1a] text-white">
+      <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>
+        <Zap className="text-indigo-500 w-8 h-8" />
       </motion.div>
     </div>
   );
@@ -53,166 +53,188 @@ const App = () => {
   const chartData = stats ? Object.entries(stats.stats).map(([name, value]) => ({ name, value })) : [];
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-200 p-6 md:p-8 bg-grid font-sans overflow-x-hidden">
-      <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
-        <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
-          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-indigo-400 via-white to-rose-400 bg-clip-text text-transparent tracking-tight">
-            Attention Ledger
-          </h1>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <p className="text-slate-400 text-sm italic">Tracking cognitive flow in real-time</p>
-          </div>
-        </motion.div>
-        
-        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex gap-4">
-           <div className="glass-card px-8 py-4 flex items-center gap-4 bg-indigo-500/5">
-             <div className="p-3 bg-indigo-500/10 rounded-full">
-               <TrendingUp className="text-indigo-400 w-6 h-6" />
-             </div>
-             <div>
-               <p className="text-xs uppercase tracking-widest text-slate-500 font-bold">Attention ROI</p>
-               <p className="text-4xl font-mono font-black text-white">{stats?.roi.toFixed(1)}%</p>
-             </div>
-           </div>
-        </motion.div>
-      </header>
+    <div className="min-h-screen bg-[#090e1a] text-slate-300 font-sans selection:bg-indigo-500/30">
+      {/* Sidebar Navigation (Slim) */}
+      <aside className="fixed left-0 top-0 bottom-0 w-20 border-r border-white/5 flex flex-col items-center py-8 gap-10 bg-[#090e1a] z-50">
+        <div className="p-3 bg-indigo-500/10 rounded-2xl text-indigo-400">
+          <Zap className="w-6 h-6" />
+        </div>
+        <nav className="flex flex-col gap-8">
+          <NavItem icon={<LayoutDashboard className="w-5 h-5" />} active />
+          <NavItem icon={<TrendingUp className="w-5 h-5" />} />
+          <NavItem icon={<Settings className="w-5 h-5" />} />
+        </nav>
+      </aside>
 
-      <main className="max-w-7xl mx-auto space-y-8">
-        {/* Timeline Horizontal Bar */}
-        <motion.section initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="glass-card p-6 bg-slate-900/40">
-           <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold flex items-center gap-2 uppercase tracking-tight text-slate-300">
-                <Clock className="text-indigo-400 w-5 h-5" /> Activity Stream
-              </h2>
-              <span className="text-xs text-slate-500">Live Feedback (Last 100 blocks)</span>
-           </div>
-           <div className="flex h-12 w-full gap-0.5 rounded-lg overflow-hidden border border-white/5 shadow-2xl">
-              {timeline.map((log, i) => (
-                <div 
-                   key={i} 
-                   className="h-full flex-grow transition-all hover:scale-y-110"
-                   style={{ backgroundColor: COLORS[log.cognitive_state as keyof typeof COLORS] || '#1e293b' }}
-                   title={`${log.domain} - ${log.cognitive_state} @ ${format(new Date(log.timestamp), 'HH:mm')}`}
-                />
-              ))}
-              {timeline.length === 0 && <div className="w-full flex items-center justify-center text-slate-500 italic text-sm">Waiting for incoming logs...</div>}
-           </div>
-        </motion.section>
+      <main className="pl-20 min-h-screen">
+        <div className="max-w-7xl mx-auto px-10 py-12">
+          {/* Header */}
+          <header className="flex justify-between items-end mb-16">
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+              <h1 className="text-sm font-black uppercase tracking-[0.3em] text-slate-500 mb-2">Portfolio Overview</h1>
+              <h2 className="text-5xl font-black text-white tracking-tight">Attention Assets</h2>
+            </motion.div>
+            <div className="flex items-center gap-4 text-xs font-bold text-slate-500 bg-white/5 px-4 py-2 rounded-full border border-white/5">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+              Live Protocol Active
+            </div>
+          </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Detailed Cards */}
-          <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <MetricCard 
-                title="Deep Work" 
-                value={stats?.stats['Deep Work'] || 0} 
-                unit="min" 
-                icon={<Brain className="text-indigo-400" />} 
-                color="border-indigo-500/40"
-                desc="High focus investment."
-                delay={0.1}
-            />
-            <MetricCard 
-                title="Fragmented" 
-                value={stats?.stats['Fragmented Attention'] || 0} 
-                unit="min" 
-                icon={<AlertTriangle className="text-amber-400" />} 
-                color="border-amber-500/40"
-                desc="Switching tax paid."
-                delay={0.2}
-            />
-            <MetricCard 
-                title="Focus Debt" 
-                value={stats?.stats['Passive Consumption'] || 0} 
-                unit="min" 
-                icon={<Ghost className="text-rose-400" />} 
-                color="border-rose-500/40"
-                desc="Lost to algorithms."
-                delay={0.3}
-            />
+          <div className="grid grid-cols-12 gap-10">
+            {/* Left Column: Hero ROI & Core Metrics */}
+            <div className="col-span-12 lg:col-span-8 space-y-10">
+              <div className="grid grid-cols-2 gap-10">
+                {/* Hero ROI Section */}
+                <motion.section 
+                  initial={{ scale: 0.95, opacity: 0 }} 
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="col-span-1 glass-card p-10 flex flex-col justify-between items-center text-center bg-gradient-to-br from-indigo-500/10 to-transparent relative overflow-hidden group"
+                >
+                   <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                      <TrendingUp className="w-32 h-32" />
+                   </div>
+                   <h3 className="text-xs uppercase font-black tracking-widest text-slate-500">Net Return on Attention</h3>
+                   <div className="my-8">
+                      <p className="text-7xl font-mono font-black text-white leading-none">
+                        {stats?.roi.toFixed(0)}<span className="text-indigo-400 text-4xl">%</span>
+                      </p>
+                      <p className="text-sm text-slate-500 mt-4 font-bold">Performance Delta: +2.4%</p>
+                   </div>
+                   <button className="text-[10px] uppercase font-bold tracking-widest px-6 py-2 rounded-full border border-white/10 hover:bg-white/5 transition-all">
+                      View Historical ROI
+                   </button>
+                </motion.section>
 
-            <section className="sm:col-span-3 glass-card p-8 min-h-[400px]">
-              <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-                <div>
-                  <h2 className="text-2xl font-black mb-1 flex items-center gap-2">
-                    <Activity className="text-yellow-400 w-6 h-6" />
-                    Focus Distribution
-                  </h2>
-                  <p className="text-slate-500 text-sm">Aggregated cognitive load across categories.</p>
-                </div>
-                <div className="mt-6 md:mt-0 flex gap-6">
-                    {Object.entries(COLORS).map(([name, color]) => (
-                        <div key={name} className="flex items-center gap-2">
-                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }}></div>
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">{name}</span>
-                        </div>
-                    ))}
-                </div>
-              </div>
-              <div className="h-64 mt-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={chartData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={80}
-                      outerRadius={100}
-                      paddingAngle={8}
-                      dataKey="value"
-                      stroke="none"
-                    >
-                      {chartData.map((_entry: any, index) => (
-                        <Cell key={`cell-${index}`} fill={Object.values(COLORS)[index]} className="hover:opacity-80 transition-opacity cursor-pointer" />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                      itemStyle={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </section>
-          </div>
-
-          {/* Right Sidebar */}
-          <div className="space-y-8">
-            <motion.section initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="glass-card p-6 border-indigo-500/20 bg-indigo-500/5">
-               <h2 className="text-xl font-bold mb-4">Ledger Analysis</h2>
-               <div className="space-y-4">
-                  <InsightItem 
-                    title="Current Status"
-                    text={stats?.roi > 50 ? "Your attention is generating dividends." : "High context switching detected."}
-                    type={stats?.roi > 50 ? "success" : "warning"}
-                  />
-                  <InsightItem 
-                     title="AI Tip"
-                     text="Dedicate another 20min to your current deep work task to hit peak flow."
-                     type="info"
-                  />
-               </div>
-            </motion.section>
-
-            <motion.section initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="glass-card p-6 overflow-hidden relative">
-               <div className="absolute top-0 right-0 p-4 opacity-10">
-                  <Activity className="w-20 h-20" />
-               </div>
-               <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Focus Sources</h3>
-               <div className="space-y-3">
-                  {timeline.slice(-5).reverse().map((log, i) => (
-                    <div key={i} className="flex justify-between items-center text-xs p-2 rounded-lg bg-white/5">
-                      <span className="font-mono text-slate-300 truncate max-w-[120px]">{log.domain}</span>
-                      <span className="px-2 py-0.5 rounded text-[10px]" style={{ color: COLORS[log.cognitive_state as keyof typeof COLORS] }}>{log.cognitive_state}</span>
+                {/* Cognitive Breakdown Card */}
+                <motion.section 
+                  initial={{ scale: 0.95, opacity: 0 }} 
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                  className="col-span-1 glass-card p-8 bg-slate-900/20"
+                >
+                   <h3 className="text-xs uppercase font-black tracking-widest text-slate-500 mb-6">Asset Allocation</h3>
+                   <div className="h-48 relative">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={chartData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={50}
+                          outerRadius={70}
+                          paddingAngle={10}
+                          dataKey="value"
+                          stroke="none"
+                        >
+                          {chartData.map((_entry: any, index) => (
+                            <Cell key={`cell-${index}`} fill={Object.values(COLORS)[index]} className="hover:opacity-80 transition-opacity" />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                       <LayoutDashboard className="w-6 h-6 text-slate-700" />
                     </div>
-                  ))}
-               </div>
-            </motion.section>
+                   </div>
+                   <div className="grid grid-cols-2 gap-4 mt-6">
+                      {Object.entries(COLORS).map(([name, color]) => (
+                        <div key={name} className="flex items-center gap-2">
+                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }}></div>
+                           <span className="text-[10px] font-bold text-slate-500 truncate">{name}</span>
+                        </div>
+                      ))}
+                   </div>
+                </motion.section>
+              </div>
 
-            <button className="w-full py-4 glass-card border-indigo-500/30 text-indigo-400 font-bold hover:bg-indigo-500/10 transition-all flex items-center justify-center gap-2 group">
-              Export Statement
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+              {/* Activity Timeline (Streamlined) */}
+              <motion.section initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xs uppercase font-black tracking-widest text-slate-500 flex items-center gap-2">
+                    <Clock className="w-4 h-4" /> Focus Stream
+                  </h3>
+                  <div className="flex gap-1">
+                    {timeline.slice(-40).map((log, i) => (
+                      <div 
+                        key={i} 
+                        className="w-2.5 h-6 rounded-sm opacity-60 hover:opacity-100 transition-all hover:scale-y-125"
+                        style={{ backgroundColor: COLORS[log.cognitive_state as keyof typeof COLORS] || '#1e293b' }}
+                        title={log.domain}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </motion.section>
+
+              {/* Key Metrics Row */}
+              <div className="grid grid-cols-3 gap-8">
+                <MiniMetric 
+                  icon={<Brain className="text-indigo-400 w-4 h-4" />} 
+                  title="Deep Stacks" 
+                  value={stats?.stats['Deep Work'] || 0} 
+                  unit="min"
+                />
+                <MiniMetric 
+                  icon={<AlertTriangle className="text-amber-400 w-4 h-4" />} 
+                  title="Switch Tax" 
+                  value={stats?.stats['Fragmented Attention'] || 0} 
+                  unit="min"
+                />
+                <MiniMetric 
+                  icon={<Ghost className="text-rose-400 w-4 h-4" />} 
+                  title="Leakage" 
+                  value={stats?.stats['Passive Consumption'] || 0} 
+                  unit="min"
+                />
+              </div>
+            </div>
+
+            {/* Right Column: Insights & Ledger History */}
+            <div className="col-span-12 lg:col-span-4 space-y-10">
+               <motion.section 
+                initial={{ x: 20, opacity: 0 }} 
+                animate={{ x: 0, opacity: 1 }} 
+                transition={{ delay: 0.3 }}
+                className="glass-card p-8 border-indigo-500/20 bg-indigo-500/5 space-y-8"
+               >
+                  <h3 className="text-xs uppercase font-black tracking-widest text-slate-400">Ledger Insights</h3>
+                  <InsightItem 
+                    title="Cognitive Reserve"
+                    text={stats?.roi > 50 ? "High flow potential. Ready for aggressive deep work." : "Attention fatigue detected. Prioritize single-tasking."}
+                    status={stats?.roi > 50 ? "optimal" : "warning"}
+                  />
+                  <InsightItem 
+                    title="Audit Recommendation"
+                    text="Your 'Leakage' is up 12% today. Review your YouTube consumption."
+                    status="info"
+                  />
+               </motion.section>
+
+               <motion.section 
+                initial={{ x: 20, opacity: 0 }} 
+                animate={{ x: 0, opacity: 1 }} 
+                transition={{ delay: 0.4 }}
+                className="space-y-6"
+               >
+                  <h3 className="text-xs uppercase font-black tracking-widest text-slate-500">Transaction History</h3>
+                  <div className="space-y-1">
+                    {timeline.slice(-6).reverse().map((log, i) => (
+                      <div key={i} className="flex justify-between items-center p-4 rounded-xl hover:bg-white/5 transition-colors group">
+                        <div className="flex items-center gap-4">
+                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS[log.cognitive_state as keyof typeof COLORS] }}></div>
+                           <div className="overflow-hidden">
+                              <p className="text-sm font-bold text-white truncate max-w-[140px] tracking-tight">{log.domain}</p>
+                              <p className="text-[10px] text-slate-500 uppercase font-black mt-0.5 tracking-widest">{format(new Date(log.timestamp), 'HH:mm:ss')}</p>
+                           </div>
+                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                          View Details
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+               </motion.section>
+            </div>
           </div>
         </div>
       </main>
@@ -220,35 +242,40 @@ const App = () => {
   );
 }
 
-const MetricCard = ({ title, value, unit, icon, color, desc, delay }: any) => (
-  <motion.div 
-    initial={{ y: 20, opacity: 0 }} 
-    animate={{ y: 0, opacity: 1 }} 
-    transition={{ delay }}
-    className={`glass-card p-6 border-b-4 ${color} transition-all hover:translate-y-[-4px]`}
-  >
-    <div className="flex justify-between items-start mb-6">
-      <div className="p-3 bg-slate-800/40 rounded-xl shadow-inner border border-white/5">{icon}</div>
-      <span className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">{title}</span>
-    </div>
-    <div className="flex items-baseline gap-2">
-      <span className="text-5xl font-mono font-black tracking-tighter text-white">{value}</span>
-      <span className="text-slate-500 text-sm font-bold uppercase">{unit}</span>
-    </div>
-    <p className="text-xs text-slate-500 mt-4 leading-relaxed font-medium">{desc}</p>
-  </motion.div>
+const NavItem = ({ icon, active }: { icon: React.ReactNode, active?: boolean }) => (
+  <div className={`p-4 rounded-2xl cursor-pointer transition-all hover:bg-white/5 ${active ? 'text-white bg-white/5' : 'text-slate-600 hover:text-slate-400'}`}>
+    {icon}
+  </div>
 );
 
-const InsightItem = ({ title, text, type }: any) => {
-  const styles = {
-    success: 'border-indigo-500/20 bg-indigo-500/5 text-indigo-200',
-    warning: 'border-rose-500/20 bg-rose-500/5 text-rose-200',
-    info: 'border-slate-500/20 bg-slate-500/5 text-slate-300'
+const MiniMetric = ({ icon, title, value, unit }: any) => (
+  <div className="glass-card p-6 border-white/5 flex flex-col gap-2">
+    <div className="flex items-center gap-2 text-slate-500">
+      {icon}
+      <span className="text-[10px] uppercase font-black tracking-widest">{title}</span>
+    </div>
+    <div className="flex items-baseline gap-1">
+      <span className="text-3xl font-mono font-black text-white leading-none">{value}</span>
+      <span className="text-[10px] text-slate-600 font-bold uppercase">{unit}</span>
+    </div>
+  </div>
+);
+
+const InsightItem = ({ title, text, status }: any) => {
+  const meta = {
+    optimal: { color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+    warning: { color: 'text-rose-400', bg: 'bg-rose-500/10' },
+    info: { color: 'text-slate-400', bg: 'bg-slate-800/50' }
   };
+  const { color, bg } = meta[status as keyof typeof meta] || meta.info;
+  
   return (
-    <div className={`p-4 rounded-xl border ${styles[type as keyof typeof styles]}`}>
-      <p className="text-[10px] uppercase font-bold tracking-widest opacity-60 mb-1">{title}</p>
-      <p className="text-sm font-medium leading-snug">{text}</p>
+    <div className="space-y-2">
+      <div className={`inline-block px-2 py-0.5 rounded text-[8px] uppercase font-black tracking-widest ${bg} ${color}`}>
+        {status}
+      </div>
+      <p className="text-xs font-bold text-slate-500 uppercase tracking-widest opacity-60 ml-0.5">{title}</p>
+      <p className="text-sm font-bold text-slate-200 leading-snug tracking-tight">{text}</p>
     </div>
   );
 }
