@@ -37,6 +37,15 @@ async function logAttention(tabId) {
             content_type: null
         };
 
+        // Cache for popup UI
+        chrome.storage.local.set({
+            current_session: {
+                domain: data.domain,
+                wpm: data.typing_speed_wpm,
+                switches: data.window_switch_count
+            }
+        });
+
         const success = await sendToBackend(data);
         if (!success) {
             await bufferData(data);
