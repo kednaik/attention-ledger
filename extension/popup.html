@@ -3,13 +3,178 @@
 <head>
     <title>Attention Ledger</title>
     <style>
-        body { width: 200px; padding: 10px; font-family: sans-serif; }
-        .status { font-weight: bold; color: green; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap');
+
+        :root {
+            --bg: #090e1a;
+            --surface: rgba(255, 255, 255, 0.05);
+            --indigo: #6366f1;
+            --rose: #f43f5e;
+            --slate: #94a3b8;
+        }
+
+        body {
+            width: 280px;
+            margin: 0;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, var(--indigo), var(--rose));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .hero {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .hero-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--slate);
+        }
+
+        .roi-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 42px;
+            margin: 8px 0;
+        }
+
+        .roi-unit {
+            font-size: 18px;
+            color: var(--indigo);
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: var(--surface);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .metric-val {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .metric-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--slate);
+            margin-top: 4px;
+        }
+
+        .domain-row {
+            font-size: 11px;
+            color: var(--slate);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+
+        .domain-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--indigo);
+            border-radius: 50%;
+        }
+
+        .btn {
+            width: 100%;
+            background: var(--indigo);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
-    <h3>Attention Ledger</h3>
-    <p>Status: <span class="status">Tracking...</span></p>
-    <p>Data is being sent to your local dashboard.</p>
+    <div class="container">
+        <div class="header">
+            <span class="logo">ATTENTION LEDGER</span>
+            <div class="status-dot"></div>
+        </div>
+
+        <div class="hero">
+            <span class="hero-label">Current ROI</span>
+            <h2 class="roi-value" id="roi">-- <span class="roi-unit">%</span></h2>
+            <div id="state-label" style="font-size: 11px; font-weight: 700; color: #6366f1;">Analysing Session...</div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-val" id="wpm">0</div>
+                <div class="metric-label">WPM</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-val" id="switches">0</div>
+                <div class="metric-label">Switches</div>
+            </div>
+        </div>
+
+        <div class="domain-row">
+            <div class="domain-dot"></div>
+            <span id="domain">Waiting for active tab...</span>
+        </div>
+
+        <button class="btn" id="open-dashboard">Launch Console</button>
+    </div>
+    <script src="popup.js"></script>
 </body>
 </html>
