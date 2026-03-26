@@ -66,6 +66,10 @@ async def get_stats(db: Session = Depends(get_db)):
     total = sum(stats.values())
     roi = (stats["Deep Work"] / total * 100) if total > 0 else 0
     
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "attention-ledger-api"}
+
 @app.get("/timeline")
 async def get_timeline(db: Session = Depends(get_db)):
     logs = db.query(DBAttentionLog).order_by(DBAttentionLog.timestamp.desc()).limit(100).all()
