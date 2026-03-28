@@ -72,7 +72,7 @@ const App = () => {
           <header className="flex justify-between items-end mb-16">
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
               <h1 className="text-sm font-black uppercase tracking-[0.3em] text-slate-500 mb-2">Portfolio Overview</h1>
-              <h2 className="text-5xl font-black text-white tracking-tight">Attention Assets</h2>
+              <h2 className="text-5xl font-black text-white tracking-tight">Attention Ledger Engine</h2>
             </motion.div>
             <div className="flex items-center gap-4 text-xs font-bold text-slate-500 bg-white/5 px-4 py-2 rounded-full border border-white/5">
               <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
